@@ -1,0 +1,171 @@
+{
+  
+  "songs": [
+    {
+      "id": "1",
+      "title": "Chúng Ta Không Thuộc Về",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/1.jpg"
+    },
+    {
+      "id": "2",
+      "title": "Chúng Ta Của Tương Lai",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/2.jpg"
+    },
+    {
+      "id": "3",
+      "title": "Lạc Trôi",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/3.jpg"
+    },
+    {
+      "id": "4",
+      "title": "Chúng Ta Của Hiện Tại",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/4.jpg"
+    },
+    {
+      "id": "5",
+      "title": "Hãy Trao Cho Anh",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/5.jpg"
+    },
+    {
+      "id": "6",
+      "title": "Nơi Này Có Anh",
+      "artist": "Sơn Tùng MTP",
+      "poster": "img/6.jpg"
+    },
+    {
+      "id": "7",
+      "title": "Không Thể Say",
+      "artist": "Hiếu Thứ Hai",
+      "poster": "img/7.jpg"
+    },
+    {
+      "id": "8",
+      "title": "Sao Hạng A",
+      "artist": "Anh Trai Say Hi",
+      "poster": "img/8.jpg"
+    },
+    {
+      "id": "9",
+      "title": "Tràn Bộ Nhớ",
+      "artist": "Dương Domic",
+      "poster": "img/9.jpg"
+    },
+    {
+      "id": "10",
+      "title": "Kim Phút Kim Giờ",
+      "artist": "Anh Trai Say Hi",
+      "poster": "img/10.jpg"
+    },
+    {
+      "id": "11",
+      "title": "Ngáo Ngơ",
+      "artist": "Anh Trai Say Hi",
+      "poster": "img/11.jpg"
+    },
+    {
+      "id": "12",
+      "title": "Thế Giới Ảo Tình Yêu Thật",
+      "artist": "Trịnh Đình Quang",
+      "poster": "img/12.jpg"
+    },
+    {
+      "id": "13",
+      "title": "Lấy Chồng Sớm Làm Gì",
+      "artist": "HuyR x Tuấn Cry",
+      "poster": "img/13.jpg"
+    },
+    {
+      "id": "14",
+      "title": "Yêu Em Từ Bé",
+      "artist": "HuyR",
+      "poster": "img/14.jpg"
+    },
+    {
+      "id": "15",
+      "title": "Chị Mẹ",
+      "artist": "Anh Tú",
+      "poster": "img/15.jpg"
+    },
+    {
+      "id": "16",
+      "title": "Yêu Em 2 Ngày",
+      "artist": "Dương Domic",
+      "poster": "img/16.jpg"
+    }
+  ],
+
+  
+  "popSongs":[
+    {
+      "id_pop": "17",
+      "title_pop": "Độ Đúng Đời",
+      "artist_pop": "Thiện Hưng",
+      "poster_pop": "img/17.jpg"
+    },
+    {
+      "id_pop": "18",
+      "title_pop": "Không Yêu Trả Dép Tôi Về",
+      "artist_pop": "HuyR",
+      "poster_pop": "img/18.jpg"
+    },
+    {
+      "id_pop": "19",
+      "title_pop": "Tâm Sự Tuổi 30",
+      "artist_pop": "Trịnh Thăng Bình",
+      "poster_pop": "img/19.jpg"
+    },
+    {
+      "id_pop": "20",
+      "title_pop": "Anh Thanh Niên",
+      "artist_pop": "HuyR",
+      "poster_pop": "img/20.jpg"
+    },
+    {
+      "id_pop": "21",
+      "title_pop": "Cô Gái Vàng",
+      "artist_pop": "HuyR x Tuấn Cry",
+      "poster_pop": "img/21.jpg"
+    },
+    {
+      "id_pop": "22",
+      "title_pop": "Cô Gái M52",
+      "artist_pop": "HuyR ft. Tùng Viu",
+      "poster_pop": "img/22.jpg"
+    },
+    {
+      "id_pop": "23",
+      "title_pop": "Bông Hoa Đẹp Nhất",
+      "artist_pop": "Quân AP",
+      "poster_pop": "img/23.jpg"
+    },
+    {
+      "id_pop": "24",
+      "title_pop": "Ước Mơ Của Mẹ",
+      "artist_pop": "Quân AP",
+      "poster_pop": "img/24.jpg"
+    },
+    {
+      "id_pop": "25",
+      "title_pop": "Cha Già Rồi Đúng Không",
+      "artist_pop": "ALI HOÀNG DƯƠNG",
+      "poster_pop": "img/25.jpg"
+    },
+    {
+      "id_pop": "26",
+      "title_pop": "Lớn Rồi Còn Khóc Nhè",
+      "artist_pop": "Trúc Nhân",
+      "poster_pop": "img/26.jpg"
+    },
+    {
+      "id_pop": "27",
+      "title_pop": "Họ Yêu Ai Mất Rồi",
+      "artist_pop": "Doãn Hiếu",
+      "poster_pop": "img/27.jpg"
+    }
+  ]
+}
