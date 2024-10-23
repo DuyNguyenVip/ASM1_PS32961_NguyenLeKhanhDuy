@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rhythmix</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="icon" href="img/logo.jpg" type="image/x-icon" />
+  </head>
+  <body>
+    <header>
+      <div class="menu_side">
+        <h1>Music Rhythmix</h1>
+        <div class="playlist">
+          <h4 class="active">
+            <span></span><i class="bi bi-music-note-beamed"></i> Danh sách phát
+          </h4>
+          <h4>
+            <span></span><i class="bi bi-music-note-beamed"></i> Nhạc Thịnh Hành
+          </h4>
+          <h4>
+            <span></span><i class="bi bi-music-note-beamed"></i> Nghe Gần Đây
+          </h4>
+          <h4>
+            <span></span><i class="bi bi-cloud-arrow-up-fill"></i></i> Đã Tải Lên
+          </h4>
+        </div>
+        <ul class="menu_song" id="songList">
+          <h4 class="active">
+                    Bảng Xếp hạng
+          </h4><br>
+          <!-- <span>${String(index + 1).padStart(2, "0")}</span>
+        <img src="${song.poster}">
+        <h5>
+            ${song.title}
+            <div class="subtitle">${song.artist}</div>
+        </h5>
+        <i class="bi playListPlay bi-play-circle-fill" id="${song.id}"></i> -->
+        </ul>
+      </div>
+      <main class="song_side">
+        <nav>
+          <ul>
+            <li>Trang Chủ <span></span></li>
+            <li>Thư Viện</li>
+            <li>RADIO</li>
+          </ul>
+          <div class="search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search Music..." />
+            <div class="search_results"></div>
+              <a href="" class="card">
+                <!-- <img src="img/1.jpg" alt="" />
+                <div class="content">
+                  Chúng Ta Không Thuộc Về nhau
+                  <i class="bi playListPlay bi-play-circle-fill" id="7"></i>
+
+                  <div class="subtitle">Sơn Tùng MTP</div>
+                </div> -->
+              </a>
+            </div>
+          </div>
+          <div class="user">
+            <img src="img/User.png" alt="User" title="Nguyễn Lê Khánh Duy" />
+          </div>
+        </nav>
+        <div class="content">
+          <h1>Sơn Tùng MTP</h1>
+          <p>
+            Sơn Tùng M-TP là một trong những nghệ sĩ nổi bật nhất <br>
+            của âm nhạc Việt Nam hiện nay. 
+          </p>
+          <div class="buttons">
+            <button>PLAY</button>
+            <button>Theo Dõi</button>
+          </div>
+        </div>
+
+        <div class="popular_song">
+          <div class="h4">
+            <h4>Gợi Ý Nhạc</h4>
+            <div class="btn_s">
+              <i id="pop_song_left" class="bi bi-arrow-left-short"></i>
+              <i id="pop_song_right" class="bi bi-arrow-right-short"></i>
+            </div>
+          </div>
+          <div class="pop_song" id="popSongList">
+            <!-- <li class="songItem">
+                        <div class="img_play">
+                            <img src="img/1.jpg">
+                            <i class="bi playListPlay bi-play-circle-fill" id="7"></i>
+                        </div>
+                        <h5>koong the say<br>
+                            <div class="subtitle">Hiue thu 2</div>
+                        </h5>
+                    </li> -->
+          </div>
+        </div>
+        <div class="popular_artists">
+          <div class="h4">
+            <h4>Gợi Ý Ca Sĩ</h4>
+            <div class="btn_s">
+              <i id="pop_art_left" class="bi bi-arrow-left-short"></i>
+              <i id="pop_art_right" class="bi bi-arrow-right-short"></i>
+            </div>
+          </div>
+          <div class="item Artists_bx">
+            <li>
+              <a href="arjit.html"
+                ><img
+                  src="https://kenh14cdn.com/thumb_w/620/203336854389633024/2022/9/13/photo-2-1663046369059130450414.jpg"
+                  alt="Mono"
+                  title="Mono"
+              /></a>
+            </li>
+            <li>
+              <img src="img/Atus.jpg" alt="AnhTu" title="Mono" />
+            </li>
+            <li>
+              <img src="img/TuVoi.jpg" alt="AnhTu" title="AnhTu" />
+            </li>
+            <li>
+              <img src="img/LyLy.jpg" alt="LyLy" title="LyLy" />
+            </li>
+            <li>
+              <img src="img/hieuthu2.jpg" alt="HieuThuHai" title="HieuThuHai" />
+            </li>
+            <li>
+              <img
+                src="img/captainboy.jpg"
+                alt="captainboy"
+                title="captainboy"
+              />
+            </li>
+            <!-- Các nghệ sĩ khác -->
+          </div>
+        </div>
+      </main>
+      <div class="master_play">
+        <div class="wave" id="wave">
+          <div class="wave1"></div>
+          <div class="wave1"></div>
+          <div class="wave1"></div>
+        </div>
+        <img
+          src=""
+          alt=""
+          id="poster_master_play"
+        />
+        <h5>
+          <div class="title" id="title"></div>
+          <br />
+          <div class="subtitle" id="artist"></div>
+        </h5>
+        <div class="icon">
+          <i class="bi shuffle bi-music-note-beamed">next</i>
+          <i class="bi bi-skip-start-fill" id="back"></i>
+          <i class="bi bi-play-fill" id="masterPlay"></i>
+          <i class="bi bi-skip-end-fill" id="next"></i>
+          <a href="" download="" id="download_music">
+            <i class="bi bi-cloud-download-fill"></i>
+          </a>
+        </div>
+        <span id="currentStart">0:00</span>
+        <div class="bar">
+          <input type="range" id="seek" min="0" value="0" max="100" />
+          <div class="bar2" id="bar2"></div>
+          <div class="dot"></div>
+        </div>
+        <span id="currentEnd">0:00</span>
+        <div class="vol">
+          <i class="bi bi-volume-down-fill" id="vol_icon"></i>
+          <input type="range" id="vol" min="0" value="0" max="100" />
+          <div class="vol_bar"></div>
+          <div class="dot" id="vol_dot"></div>
+        </div>
+      </div>
+    </header>
+    <!-- <script type="module">
+      import { lay_songs, lay_pop_songs } from './js/app.js';
+  
+      (async () => {
+        try {
+          // Gọi hàm lay_songs và chèn kết quả vào #songList
+          const songsHtml = await lay_songs();
+          document.querySelector('#songList').innerHTML = songsHtml;
+  
+          // Gọi hàm lay_pop_songs và chèn kết quả vào #popSongList
+          const popSongsHtml = await lay_pop_songs();
+          document.querySelector('#popSongList').innerHTML = popSongsHtml;
+        } catch (error) {
+          console.error('Lỗi khi lấy dữ liệu:', error);
+        }
+      })();
+    </script> -->
+    
+    <script src="js/app2.js"></script>
+
+  </body>
+</html>
