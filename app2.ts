@@ -1,20 +1,12 @@
-// Định nghĩa kiểu dữ liệu cho bài hát
+// Khởi tạo đối tượng Audio
+const music: HTMLAudioElement = new Audio("DungLamTraiTimAnhDau.mp3");
+
 interface Song {
   id: string;
   title: string;
   artist: string;
   poster: string;
 }
-
-interface PopSong {
-  id_pop: string;
-  title_pop: string;
-  artist_pop: string;
-  poster_pop: string;
-}
-
-// Khởi tạo đối tượng Audio
-const music: HTMLAudioElement = new Audio("DungLamTraiTimAnhDau.mp3");
 
 // Danh sách các bài hát chính
 const songs: Song[] = [
@@ -134,6 +126,13 @@ songs.forEach((song: Song, index: number) => {
   songList.appendChild(li);
 });
 
+interface PopSong {
+  id_pop: string;
+  title_pop: string;
+  artist_pop: string;
+  poster_pop: string;
+}
+
 // Danh sách các bài hát pop
 const popSongs: PopSong[] = [
   {
@@ -242,21 +241,21 @@ const allSongs: AllSong[] = [
 ];
 
 // Ánh xạ từng phần tử HTML với dữ liệu bài hát
-Array.from(document.getElementsByClassName("songItem")).forEach(
-  (element: Element, i: number) => {
-    if (songs[i]) {
-      // Kiểm tra xem bài hát có tồn tại trong mảng không
-      (element.getElementsByTagName("img")[0] as HTMLImageElement).src =
-        songs[i].poster;
+// Array.from(document.getElementsByClassName("songItem")).forEach(
+//   (element: Element, i: number) => {
+//     if (songs[i]) {
+//       // Kiểm tra xem bài hát có tồn tại trong mảng không
+//       (element.getElementsByTagName("img")[0] as HTMLImageElement).src =
+//         songs[i].poster;
 
-      // Kết hợp tiêu đề và nghệ sĩ vào một chuỗi
-      element.getElementsByTagName("h5")[0].innerHTML = `
-        ${songs[i].title}
-        <div class="subtitle">${songs[i].artist}</div>
-      `;
-    }
-  }
-);
+//       // Kết hợp tiêu đề và nghệ sĩ vào một chuỗi
+//       element.getElementsByTagName("h5")[0].innerHTML = `
+//         ${songs[i].title}
+//         <div class="subtitle">${songs[i].artist}</div>
+//       `;
+//     }
+//   }
+// );
 
 // search data start
 const search_results = document.getElementsByClassName(
@@ -406,6 +405,13 @@ Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
     target.classList.add("bi-pause-circle-fill");
     wave.classList.add("active1");
   });
+});
+
+// Thêm sự kiện click vào nút tải xuống
+const downloadButton = document.getElementById("download_music");
+downloadButton.addEventListener("click", () => {
+  const songTitle = downloadButton.getAttribute("download");
+  alert(`Bạn đang tải xuống bài hát: ${songTitle}`);
 });
 
 const currentStart = document.getElementById("currentStart") as HTMLElement;

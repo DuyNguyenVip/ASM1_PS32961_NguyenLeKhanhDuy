@@ -1,7 +1,8 @@
 // Khai báo các biến toàn cục
-const music = new Audio("DungLamTraiTimAnhDau.mp3");
+const music = new Audio();
 const URL_API = `http://localhost:3000`;
 
+// Định nghĩa giao diện chung cho bài hát
 interface Song {
   id: string;
   title: string;
@@ -9,13 +10,10 @@ interface Song {
   poster: string;
 }
 
-interface PopSong {
-  id_pop: string;
-  title_pop: string;
-  artist_pop: string;
-  poster_pop: string;
-}
+// Biến toàn cục để lưu trữ tất cả các bài hát
+let allSongs: Song[] = [];
 
+// Hàm lấy danh sách bài hát và trả về HTML
 export const lay_songs = async (): Promise<string> => {
   const response = await fetch(URL_API + "/songs");
   const songs_arr: Song[] = await response.json();
@@ -38,20 +36,29 @@ export const lay_songs = async (): Promise<string> => {
   return str;
 };
 
+// Hàm lấy danh sách popSongs và trả về HTML
 export const lay_pop_songs = async (): Promise<string> => {
   const response = await fetch(URL_API + "/popSongs");
-  const songs_arr: PopSong[] = await response.json();
+  const popSongs_arr: any[] = await response.json();
   let str = "";
 
-  songs_arr.forEach((song: PopSong) => {
+  // Chuyển đổi popSongs sang cấu trúc Song
+  const popSongsAsSongs: Song[] = popSongs_arr.map((song) => ({
+    id: song.id_pop,
+    title: song.title_pop,
+    artist: song.artist_pop,
+    poster: song.poster_pop,
+  }));
+
+  popSongsAsSongs.forEach((song: Song) => {
     str += `
         <li class="songItem">
           <div class="img_play">
-            <img src="${song.poster_pop}">
-            <i class="bi playListPlay bi-play-circle-fill" id="${song.id_pop}"></i>
+            <img src="${song.poster}">
+            <i class="bi playListPlay bi-play-circle-fill" id="${song.id}"></i>
           </div>
-          <h5>${song.title_pop}<br>
-            <div class="subtitle">${song.artist_pop}</div>
+          <h5>${song.title}<br>
+            <div class="subtitle">${song.artist}</div>
           </h5>
         </li>
       `;
@@ -60,7 +67,7 @@ export const lay_pop_songs = async (): Promise<string> => {
   return str;
 };
 
-// Tải dữ liệu từ db.json
+// Tải dữ liệu từ db.json và cập nhật allSongs
 async function loadSongs() {
   const response = await fetch("json/db.json");
   const data = await response.json();
@@ -68,6 +75,17 @@ async function loadSongs() {
   if (!Array.isArray(data.songs) || !Array.isArray(data.popSongs)) {
     throw new Error("Dữ liệu không hợp lệ");
   }
+
+  // Chuyển đổi popSongs sang cấu trúc Song
+  const popSongsAsSongs: Song[] = data.popSongs.map((song: any) => ({
+    id: song.id_pop,
+    title: song.title_pop,
+    artist: song.artist_pop,
+    poster: song.poster_pop,
+  }));
+
+  // Cập nhật allSongs với dữ liệu bài hát
+  allSongs = data.songs.concat(popSongsAsSongs);
 
   return {
     songs: data.songs,
@@ -121,7 +139,7 @@ function setupSearch(allSongs: Song[]) {
         (subtitle &&
           subtitle.textContent?.toUpperCase().indexOf(input_value) > -1)
       ) {
-        (items[index] as HTMLElement).style.display = "flex"; // Hiện thị bài hát nếu tìm thấy
+        (items[index] as HTMLElement).style.display = "flex"; // Hiển thị bài hát nếu tìm thấy
       } else {
         (items[index] as HTMLElement).style.display = "none"; // Ẩn bài hát nếu không tìm thấy
       }
@@ -131,8 +149,6 @@ function setupSearch(allSongs: Song[]) {
     search_results.style.display = input.value ? "" : "none";
   });
 }
-
-
 
 // Khởi tạo các phần tử từ DOM
 const masterPlay = document.getElementById("masterPlay") as HTMLElement;
@@ -164,7 +180,6 @@ masterPlay.addEventListener("click", () => {
   }
 });
 
-
 // Hàm để đặt tất cả các nút phát về trạng thái ban đầu
 const makeAllPlays = (): void => {
   Array.from(document.getElementsByClassName("playListPlay")).forEach((el) => {
@@ -185,47 +200,57 @@ const makeAllBackground = (): void => {
 // Khai báo biến cho việc phát nhạc
 let index: number = 0;
 
-// Đăng ký sự kiện cho các nút phát
-Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
-  e.addEventListener("click", (el: Event) => {
-    const target = el.target as HTMLElement;
-    const selectedId = target.id; // Lấy id của phần tử được click
-    console.log("Bài hát được chọn:", selectedId);
-    
-    // Tìm bài hát trong danh sách
-    const numericIndex = allSongs.findIndex((song) => song.id === selectedId);
-    if (numericIndex !== -1) {
-      index = numericIndex; // Cập nhật index thành vị trí bài hát vừa được chọn
-      console.log("Chọn bài hát tại chỉ mục:", index);
+// Hàm thiết lập sự kiện cho danh sách phát
+function setupPlayListEvents() {
+  // Đăng ký sự kiện cho các nút phát
+  Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
+    e.addEventListener("click", (el: Event) => {
+      const target = el.target as HTMLElement;
+      const selectedId = target.id; // Lấy id của phần tử được click
+      console.log("Bài hát được chọn:", selectedId);
 
-      // Cập nhật nguồn âm thanh và hình ảnh cho bài hát được chọn
-      music.src = `audio/${allSongs[index].id}.mp3`;
-      poster_master_play.src = `img/${allSongs[index].id}.jpg`;
-      title.innerHTML = allSongs[index].title; // Cập nhật tiêu đề bài hát
-      artist.innerText = allSongs[index].artist; // Cập nhật tên nghệ sĩ
-      download_music.href = `audio/${allSongs[index].id}.mp3`;
+      // Tìm bài hát trong danh sách
+      const numericIndex = allSongs.findIndex((song) => song.id === selectedId);
+      if (numericIndex !== -1) {
+        index = numericIndex; // Cập nhật index thành vị trí bài hát vừa được chọn
+        console.log("Chọn bài hát tại chỉ mục:", index);
 
-      music.play(); // Phát bài hát được chọn
-      console.log("Đang phát bài hát:", music.src);
-      masterPlay.classList.remove("bi-play-fill");
-      masterPlay.classList.add("bi-pause-fill");
-      
-      // Cập nhật nền và trạng thái của danh sách bài hát
-      makeAllBackground();
-      const songItems = Array.from(document.getElementsByClassName("songItem")) as HTMLElement[];
+        // Cập nhật nguồn âm thanh và hình ảnh cho bài hát được chọn
+        music.src = `audio/${allSongs[index].id}.mp3`;
+        poster_master_play.src = `${allSongs[index].poster}`;
+        title.innerHTML = allSongs[index].title; // Cập nhật tiêu đề bài hát
+        artist.innerText = allSongs[index].artist; // Cập nhật tên nghệ sĩ
+        download_music.href = `audio/${allSongs[index].id}.mp3`;
 
-      if (numericIndex >= 0 && numericIndex < songItems.length) {
-        songItems[numericIndex].style.background = "rgb(105, 105, 105, .1)";
+        music
+          .play()
+          .then(() => {
+            console.log("Đang phát bài hát:", music.src);
+          })
+          .catch((error) => {
+            console.error("Không thể phát nhạc:", error);
+          });
+        masterPlay.classList.remove("bi-play-fill");
+        masterPlay.classList.add("bi-pause-fill");
+
+        // Cập nhật nền và trạng thái của danh sách bài hát
+        makeAllBackground();
+        const songItems = Array.from(
+          document.getElementsByClassName("songItem")
+        ) as HTMLElement[];
+
+        if (numericIndex >= 0 && numericIndex < songItems.length) {
+          songItems[numericIndex].style.background = "rgb(105, 105, 105, .1)";
+        }
+        makeAllPlays();
+        target.classList.remove("bi-play-circle-fill");
+        target.classList.add("bi-pause-circle-fill");
+      } else {
+        console.log("Không tìm thấy bài hát với ID:", selectedId);
       }
-      makeAllPlays();
-      target.classList.remove("bi-play-circle-fill");
-      target.classList.add("bi-pause-circle-fill");
-    } else {
-      console.log("Không tìm thấy bài hát với ID:", selectedId);
-    }
+    });
   });
-});
-
+}
 
 const currentStart = document.getElementById("currentStart") as HTMLElement;
 const currentEnd = document.getElementById("currentEnd") as HTMLElement;
@@ -331,7 +356,9 @@ const updateSong = (direction: "next" | "back"): void => {
   if (currentSong) {
     music.src = `audio/${currentSong.id}.mp3`; // Cập nhật nguồn nhạc
     poster_master_play.src = currentSong.poster; // Cập nhật hình ảnh bài hát
-    music.play(); // Phát bài hát
+    music.play().catch((error) => {
+      console.error("Không thể phát nhạc:", error);
+    });
     masterPlay.classList.remove("bi-play-fill");
     masterPlay.classList.add("bi-pause-fill");
     download_music.href = `audio/${currentSong.id}.mp3`;
@@ -341,7 +368,7 @@ const updateSong = (direction: "next" | "back"): void => {
     artist.innerText = currentSong.artist; // Cập nhật tên nghệ sĩ
     download_music.setAttribute("download", currentSong.title);
   } else {
-    console.error("Song not found for index:", index);
+    console.error("Không tìm thấy bài hát với chỉ số:", index);
   }
 
   // Cập nhật giao diện
@@ -420,7 +447,7 @@ if (shuffle) {
         break;
 
       default:
-        console.warn("Unhandled shuffle state:", currentText);
+        console.warn("Không xác định chế độ shuffle:", currentText);
         break;
     }
   });
@@ -439,7 +466,7 @@ const updateUI = (songDetails: any) => {
     download_music.href = `audio/${songDetails.id}.mp3`; // Cập nhật link download
     download_music.setAttribute("download", songDetails.title);
   } else {
-    console.error("Không tìm thấy bài hát với chỉ số: ", index);
+    console.error("Không tìm thấy bài hát với chỉ số:", index);
   }
 };
 
@@ -452,7 +479,9 @@ const next_music = () => {
 
   const songDetails = allSongs[index]; // Lấy thông tin bài hát từ allSongs
   updateUI(songDetails); // Cập nhật giao diện
-  music.play();
+  music.play().catch((error) => {
+    console.error("Không thể phát nhạc:", error);
+  });
   masterPlay.classList.remove("bi-play-fill");
   masterPlay.classList.add("bi-pause-fill");
 
@@ -468,7 +497,9 @@ const next_music = () => {
 const repeat_music = () => {
   const songDetails = allSongs[index]; // Lấy thông tin bài hát từ allSongs
   updateUI(songDetails); // Cập nhật giao diện
-  music.play();
+  music.play().catch((error) => {
+    console.error("Không thể phát nhạc:", error);
+  });
   masterPlay.classList.remove("bi-play-fill");
   masterPlay.classList.add("bi-pause-fill");
 
@@ -486,7 +517,9 @@ const random_music = () => {
   index = Math.floor(Math.random() * allSongs.length); // Chọn một bài hát ngẫu nhiên từ allSongs
   const songDetails = allSongs[index]; // Lấy thông tin bài hát ngẫu nhiên
   updateUI(songDetails); // Cập nhật giao diện
-  music.play();
+  music.play().catch((error) => {
+    console.error("Không thể phát nhạc:", error);
+  });
   masterPlay.classList.remove("bi-play-fill");
   masterPlay.classList.add("bi-pause-fill");
 
@@ -518,13 +551,11 @@ music.addEventListener("ended", () => {
   }
 });
 
-
-
 // Chạy ứng dụng
 async function main() {
   try {
     const { songs, popSongs } = await loadSongs(); // Tải dữ liệu
-    const allSongs: Song[] = [
+    allSongs = [
       ...songs.map((song) => ({
         id: song.id,
         title: song.title,
@@ -541,6 +572,9 @@ async function main() {
     console.log(allSongs); // Kiểm tra giá trị của allSongs
     displaySearchResults(allSongs); // Hiển thị kết quả tìm kiếm
     setupSearch(allSongs); // Thiết lập tìm kiếm
+
+    // Đăng ký sự kiện cho danh sách phát sau khi đã tạo các phần tử DOM
+    setupPlayListEvents();
   } catch (error) {
     console.error("Đã xảy ra lỗi:", error); // In ra lỗi nếu có
   }

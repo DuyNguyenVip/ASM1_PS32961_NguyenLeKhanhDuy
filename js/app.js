@@ -1,5 +1,6 @@
-const music = new Audio("DungLamTraiTimAnhDau.mp3");
+const music = new Audio();
 const URL_API = `http://localhost:3000`;
+let allSongs = [];
 export const lay_songs = async () => {
     const response = await fetch(URL_API + "/songs");
     const songs_arr = await response.json();
@@ -21,17 +22,23 @@ export const lay_songs = async () => {
 };
 export const lay_pop_songs = async () => {
     const response = await fetch(URL_API + "/popSongs");
-    const songs_arr = await response.json();
+    const popSongs_arr = await response.json();
     let str = "";
-    songs_arr.forEach((song) => {
+    const popSongsAsSongs = popSongs_arr.map((song) => ({
+        id: song.id_pop,
+        title: song.title_pop,
+        artist: song.artist_pop,
+        poster: song.poster_pop,
+    }));
+    popSongsAsSongs.forEach((song) => {
         str += `
         <li class="songItem">
           <div class="img_play">
-            <img src="${song.poster_pop}">
-            <i class="bi playListPlay bi-play-circle-fill" id="${song.id_pop}"></i>
+            <img src="${song.poster}">
+            <i class="bi playListPlay bi-play-circle-fill" id="${song.id}"></i>
           </div>
-          <h5>${song.title_pop}<br>
-            <div class="subtitle">${song.artist_pop}</div>
+          <h5>${song.title}<br>
+            <div class="subtitle">${song.artist}</div>
           </h5>
         </li>
       `;
@@ -44,6 +51,13 @@ async function loadSongs() {
     if (!Array.isArray(data.songs) || !Array.isArray(data.popSongs)) {
         throw new Error("Dữ liệu không hợp lệ");
     }
+    const popSongsAsSongs = data.popSongs.map((song) => ({
+        id: song.id_pop,
+        title: song.title_pop,
+        artist: song.artist_pop,
+        poster: song.poster_pop,
+    }));
+    allSongs = data.songs.concat(popSongsAsSongs);
     return {
         songs: data.songs,
         popSongs: data.popSongs,
@@ -125,38 +139,46 @@ const makeAllBackground = () => {
     });
 };
 let index = 0;
-Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
-    e.addEventListener("click", (el) => {
-        const target = el.target;
-        const selectedId = target.id;
-        console.log("Bài hát được chọn:", selectedId);
-        const numericIndex = allSongs.findIndex((song) => song.id === selectedId);
-        if (numericIndex !== -1) {
-            index = numericIndex;
-            console.log("Chọn bài hát tại chỉ mục:", index);
-            music.src = `audio/${allSongs[index].id}.mp3`;
-            poster_master_play.src = `img/${allSongs[index].id}.jpg`;
-            title.innerHTML = allSongs[index].title;
-            artist.innerText = allSongs[index].artist;
-            download_music.href = `audio/${allSongs[index].id}.mp3`;
-            music.play();
-            console.log("Đang phát bài hát:", music.src);
-            masterPlay.classList.remove("bi-play-fill");
-            masterPlay.classList.add("bi-pause-fill");
-            makeAllBackground();
-            const songItems = Array.from(document.getElementsByClassName("songItem"));
-            if (numericIndex >= 0 && numericIndex < songItems.length) {
-                songItems[numericIndex].style.background = "rgb(105, 105, 105, .1)";
+function setupPlayListEvents() {
+    Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
+        e.addEventListener("click", (el) => {
+            const target = el.target;
+            const selectedId = target.id;
+            console.log("Bài hát được chọn:", selectedId);
+            const numericIndex = allSongs.findIndex((song) => song.id === selectedId);
+            if (numericIndex !== -1) {
+                index = numericIndex;
+                console.log("Chọn bài hát tại chỉ mục:", index);
+                music.src = `audio/${allSongs[index].id}.mp3`;
+                poster_master_play.src = `${allSongs[index].poster}`;
+                title.innerHTML = allSongs[index].title;
+                artist.innerText = allSongs[index].artist;
+                download_music.href = `audio/${allSongs[index].id}.mp3`;
+                music
+                    .play()
+                    .then(() => {
+                    console.log("Đang phát bài hát:", music.src);
+                })
+                    .catch((error) => {
+                    console.error("Không thể phát nhạc:", error);
+                });
+                masterPlay.classList.remove("bi-play-fill");
+                masterPlay.classList.add("bi-pause-fill");
+                makeAllBackground();
+                const songItems = Array.from(document.getElementsByClassName("songItem"));
+                if (numericIndex >= 0 && numericIndex < songItems.length) {
+                    songItems[numericIndex].style.background = "rgb(105, 105, 105, .1)";
+                }
+                makeAllPlays();
+                target.classList.remove("bi-play-circle-fill");
+                target.classList.add("bi-pause-circle-fill");
             }
-            makeAllPlays();
-            target.classList.remove("bi-play-circle-fill");
-            target.classList.add("bi-pause-circle-fill");
-        }
-        else {
-            console.log("Không tìm thấy bài hát với ID:", selectedId);
-        }
+            else {
+                console.log("Không tìm thấy bài hát với ID:", selectedId);
+            }
+        });
     });
-});
+}
 const currentStart = document.getElementById("currentStart");
 const currentEnd = document.getElementById("currentEnd");
 const seek = document.getElementById("seek");
@@ -227,7 +249,9 @@ const updateSong = (direction) => {
     if (currentSong) {
         music.src = `audio/${currentSong.id}.mp3`;
         poster_master_play.src = currentSong.poster;
-        music.play();
+        music.play().catch((error) => {
+            console.error("Không thể phát nhạc:", error);
+        });
         masterPlay.classList.remove("bi-play-fill");
         masterPlay.classList.add("bi-pause-fill");
         download_music.href = `audio/${currentSong.id}.mp3`;
@@ -236,7 +260,7 @@ const updateSong = (direction) => {
         download_music.setAttribute("download", currentSong.title);
     }
     else {
-        console.error("Song not found for index:", index);
+        console.error("Không tìm thấy bài hát với chỉ số:", index);
     }
     makeAllBackground();
     const songItems = Array.from(document.getElementsByClassName("songItem"));
@@ -294,7 +318,7 @@ if (shuffle) {
                 shuffle.innerHTML = "next";
                 break;
             default:
-                console.warn("Unhandled shuffle state:", currentText);
+                console.warn("Không xác định chế độ shuffle:", currentText);
                 break;
         }
     });
@@ -311,7 +335,7 @@ const updateUI = (songDetails) => {
         download_music.setAttribute("download", songDetails.title);
     }
     else {
-        console.error("Không tìm thấy bài hát với chỉ số: ", index);
+        console.error("Không tìm thấy bài hát với chỉ số:", index);
     }
 };
 const next_music = () => {
@@ -321,7 +345,9 @@ const next_music = () => {
     }
     const songDetails = allSongs[index];
     updateUI(songDetails);
-    music.play();
+    music.play().catch((error) => {
+        console.error("Không thể phát nhạc:", error);
+    });
     masterPlay.classList.remove("bi-play-fill");
     masterPlay.classList.add("bi-pause-fill");
     makeAllBackground();
@@ -333,7 +359,9 @@ const next_music = () => {
 const repeat_music = () => {
     const songDetails = allSongs[index];
     updateUI(songDetails);
-    music.play();
+    music.play().catch((error) => {
+        console.error("Không thể phát nhạc:", error);
+    });
     masterPlay.classList.remove("bi-play-fill");
     masterPlay.classList.add("bi-pause-fill");
     makeAllBackground();
@@ -346,7 +374,9 @@ const random_music = () => {
     index = Math.floor(Math.random() * allSongs.length);
     const songDetails = allSongs[index];
     updateUI(songDetails);
-    music.play();
+    music.play().catch((error) => {
+        console.error("Không thể phát nhạc:", error);
+    });
     masterPlay.classList.remove("bi-play-fill");
     masterPlay.classList.add("bi-pause-fill");
     makeAllBackground();
@@ -374,7 +404,7 @@ music.addEventListener("ended", () => {
 async function main() {
     try {
         const { songs, popSongs } = await loadSongs();
-        const allSongs = [
+        allSongs = [
             ...songs.map((song) => ({
                 id: song.id,
                 title: song.title,
@@ -391,6 +421,7 @@ async function main() {
         console.log(allSongs);
         displaySearchResults(allSongs);
         setupSearch(allSongs);
+        setupPlayListEvents();
     }
     catch (error) {
         console.error("Đã xảy ra lỗi:", error);

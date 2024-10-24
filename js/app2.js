@@ -204,16 +204,6 @@ const allSongs = [
         poster: song.poster_pop,
     })),
 ];
-Array.from(document.getElementsByClassName("songItem")).forEach((element, i) => {
-    if (songs[i]) {
-        element.getElementsByTagName("img")[0].src =
-            songs[i].poster;
-        element.getElementsByTagName("h5")[0].innerHTML = `
-        ${songs[i].title}
-        <div class="subtitle">${songs[i].artist}</div>
-      `;
-    }
-});
 const search_results = document.getElementsByClassName("search_results")[0];
 allSongs.forEach((element) => {
     const { id, title, poster, artist } = element;
@@ -319,6 +309,11 @@ Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
         target.classList.add("bi-pause-circle-fill");
         wave.classList.add("active1");
     });
+});
+const downloadButton = document.getElementById("download_music");
+downloadButton.addEventListener("click", () => {
+    const songTitle = downloadButton.getAttribute("download");
+    alert(`Bạn đang tải xuống bài hát: ${songTitle}`);
 });
 const currentStart = document.getElementById("currentStart");
 const currentEnd = document.getElementById("currentEnd");
